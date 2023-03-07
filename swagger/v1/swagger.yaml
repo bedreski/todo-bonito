@@ -1,0 +1,232 @@
+---
+openapi: 3.0.1
+info:
+  title: TO-DO Bonito - API V1
+  version: v1
+paths:
+  "/users/{user_id}/tasks":
+    get:
+      summary: Retrieves all tasks
+      tags:
+      - Tasks
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        example: 1
+        schema:
+          type: string
+      responses:
+        '200':
+          description: tasks found
+        '404':
+          description: not found
+    post:
+      summary: Creates a task
+      tags:
+      - Tasks
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        example: 1
+        schema:
+          type: string
+      responses:
+        '201':
+          description: task created
+        '404':
+          description: not found
+        '422':
+          description: unprocessable entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+              - name
+              example:
+                name: Buy coffee
+  "/users/{user_id}/tasks/{id}":
+    get:
+      summary: Retrieves a task
+      tags:
+      - Tasks
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        example: 1
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        example: 1
+        schema:
+          type: string
+      responses:
+        '200':
+          description: task found
+        '404':
+          description: not found
+  "/users/{user_id}/tasks/{id}/complete":
+    patch:
+      summary: Completes a task
+      tags:
+      - Tasks
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        example: 1
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        example: 1
+        schema:
+          type: string
+      responses:
+        '200':
+          description: task completed
+        '404':
+          description: not found
+  "/users":
+    get:
+      summary: List all users
+      tags:
+      - Users
+      responses:
+        '200':
+          description: users found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    email:
+                      type: string
+                    phoneNumber:
+                      type: string
+                    telegramChatId:
+                      type: string
+                    notificationPreferences:
+                      type: object
+                      properties:
+                        task_completed:
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - email
+                            - sms
+                            - telegram
+                            - whatsapp
+    post:
+      summary: Create a user
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '201':
+          description: user created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  phoneNumber:
+                    type: string
+                  telegramChatId:
+                    type: string
+                  notificationPreferences:
+                    type: object
+                    properties:
+                      task_completed:
+                        type: array
+                        items:
+                          type: string
+                          enum:
+                          - email
+                          - sms
+                          - telegram
+                          - whatsapp
+        '422':
+          description: unprocessable entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      details:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                phone_number:
+                  type: string
+                telegram_chat_id:
+                  type: string
+                notification_preferences:
+                  type: object
+                  properties:
+                    task_completed:
+                      type: array
+                      items:
+                        type: string
+                        enum:
+                        - email
+                        - sms
+                        - telegram
+                        - whatsapp
+              required:
+              - name
+              - email
+              - phone_number
+              - telegram_chat_id
+              - notification_preferences
+              example:
+                name: Monica Geller
+                email: monica@geller.com
+                phone_number: "+123456789"
+                telegram_chat_id: '123456789'
+                notification_preferences:
+                  task_completed:
+                  - email
+                  - sms
+                  - telegram
+                  - whatsapp
+servers:
+- url: http://localhost:3000

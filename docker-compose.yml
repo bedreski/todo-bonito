@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.dev
+      args:
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
+    network_mode: host
+    environment:
+      - RAILS_ENV=${RAILS_ENV:-development}
+      - FAKE_SMS_ACCOUNT_ID=fake-sms-account-id
+      - FAKE_SMS_AUTH_TOKEN=fake-sms-auth-token
+      - FAKE_SMS_PHONE_NUMBER=+0000000000
+      - FAKE_TELEGRAM_AUTH_TOKEN=fake-telegram-auth-token
+      - FAKE_WHATSAPP_ACCOUNT_ID=fake-whatsapp-account-id
+      - FAKE_WHATSAPP_AUTH_TOKEN=fake-whatsapp-auth-token
+      - FAKE_WHATSAPP_PHONE_NUMBER=+0000000000
+    volumes:
+      - .:/opt/ruby-app
+      - bundle_cache:/usr/local/bundle
+    tty: true
+    profiles:
+      - dev
+
+volumes:
+  bundle_cache:

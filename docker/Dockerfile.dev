@@ -1,0 +1,26 @@
+FROM ruby:3-alpine
+
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
+RUN apk update \
+  && apk add --no-cache \
+    ca-certificates \
+    curl \
+    tzdata \
+    git \
+    build-base \
+    linux-headers \
+    bash \
+    sudo \
+    coreutils \
+  && addgroup -g ${GROUP_ID} app \
+  && adduser -s /bin/ash -u ${USER_ID} -G app -h /home/app -S -D app \
+  && mkdir /opt/ruby-app && chown -R app:app /opt/ruby-app \
+  && echo "app ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+USER app
+
+WORKDIR /opt/ruby-app
+
+RUN sudo apk add sqlite sqlite-dev
