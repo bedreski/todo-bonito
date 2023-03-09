@@ -76,7 +76,7 @@ RSpec.describe 'Tasks' do
 
       context 'when user has notification enabled to email, SMS, Telegram and Whatsapp' do
         let(:user) { create(:user, notification_preferences: { task_completed: %i[email sms telegram whatsapp] }) }
-        let(:task) { create(:task, user:) }
+        let(:task) { create(:task) }
 
         it 'sends a notification via email' do
           expect { patch("/users/#{task.user.id}/tasks/#{task.id}/complete") }
@@ -104,7 +104,7 @@ RSpec.describe 'Tasks' do
 
       context 'when user has notification enabled to email, SMS and Telegram only' do
         let(:user) { create(:user, notification_preferences: { task_completed: %i[email sms telegram] }) }
-        let(:task) { create(:task, user:) }
+        let(:task) { create(:task) }
 
         it 'sends a notification via email' do
           expect { patch("/users/#{task.user.id}/tasks/#{task.id}/complete") }
@@ -132,7 +132,7 @@ RSpec.describe 'Tasks' do
 
       context 'when user has notification enabled to email, SMS and Whatsapp only' do
         let(:user) { create(:user, notification_preferences: { task_completed: %i[email sms whatsapp] }) }
-        let(:task) { create(:task, user:) }
+        let(:task) { create(:task) }
 
         it 'sends a notification via email' do
           expect { patch("/users/#{task.user.id}/tasks/#{task.id}/complete") }
@@ -160,7 +160,7 @@ RSpec.describe 'Tasks' do
 
       context 'when user has notification enabled to email, Telegram and Whatsapp only' do
         let(:user) { create(:user, notification_preferences: { task_completed: %i[email telegram whatsapp] }) }
-        let(:task) { create(:task, user:) }
+        let(:task) { create(:task) }
 
         it 'sends a notification via email' do
           expect { patch("/users/#{task.user.id}/tasks/#{task.id}/complete") }
@@ -188,7 +188,7 @@ RSpec.describe 'Tasks' do
 
       context 'when user has notification disabled' do
         let(:user) { create(:user, notification_preferences: { task_completed: [] }) }
-        let(:task) { create(:task, user:) }
+        let(:task) { create(:task) }
 
         it 'does not send a notification via email' do
           expect { patch("/users/#{task.user.id}/tasks/#{task.id}/complete") }

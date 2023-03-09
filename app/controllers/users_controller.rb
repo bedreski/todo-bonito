@@ -3,44 +3,16 @@
 class UsersController < ApplicationController
   def index
     users = User.all
-
-    serialized_users = users.map do |user|
-      {
-        'id' => user.id,
-        'name' => user.name,
-        'email' => user.email,
-        'phoneNumber' => user.phone_number,
-        'telegramChatId' => user.telegram_chat_id,
-        'notificationPreferences' => user.notification_preferences
-      }
-    end
-
-    render(json: serialized_users)
+    render(json: users.map { |user| UserSerializer.new(user).as_json })
   end
 
   def create
     user = User.new(create_user_params)
 
     if user.save
-      serialized_user = {
-        'id' => user.id,
-        'name' => user.name,
-        'email' => user.email,
-        'phoneNumber' => user.phone_number,
-        'telegramChatId' => user.telegram_chat_id,
-        'notificationPreferences' => user.notification_preferences
-      }
-
-      render(status: :created, json: serialized_user)
+      render(status: :created, json: UserSerializer.new(user).as_json)
     else
-      serialized_error = {
-        'error' => {
-          'message' => 'Validation error',
-          'details' => user.errors.full_messages
-        }
-      }
-
-      render(status: :unprocessable_entity, json: serialized_error)
+      render(status: :unprocessable_entity, json: ValidationErrorSerializer.new(user.errors.full_messages).as_json)
     end
   end
 
