@@ -14,7 +14,7 @@ FactoryBot.define do
       end
 
       after(:create) do |user, evaluator|
-        create_list(:task, evaluator.tasks_count, :user)
+        create_list(:task, evaluator.tasks_count, user: user)
       end
     end
   end

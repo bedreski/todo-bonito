@@ -3,13 +3,12 @@
 class TasksController < ApplicationController
   def index
     tasks = user.tasks
-
-    render(json: tasks.map { |task| TaskSerializer.new(task).as_json })
+    serialized_tasks = tasks.map { |task| TaskSerializer.new(task).as_json }
+    render(json: serialized_tasks)
   end
 
   def show
     task = user.tasks.find(params[:id])
-
     render(json: TaskSerializer.new(task).as_json)
   end
 
@@ -30,7 +29,7 @@ class TasksController < ApplicationController
 
     if task.user.notification_preferences['task_completed'].present?
       if task.user.notification_preferences['task_completed'].include?('email')
-        TaskMailer.with(task).task_completed_notification.deliver_now
+        TaskMailer.with(task:).task_completed_notification.deliver_now
       end
 
       if task.user.notification_preferences['task_completed'].include?('sms')
