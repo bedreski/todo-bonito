@@ -1,4 +1,6 @@
 class TaskSerializer 
+  attr_reader :task
+
   def initialize(task)
     @task = task 
   end
@@ -13,8 +15,4 @@ class TaskSerializer
       'completedAt' => task.completed_at
     } 
   end 
-
-  private 
-
-  attr_reader :task
 end 

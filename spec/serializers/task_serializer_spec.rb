@@ -5,7 +5,6 @@ RSpec.describe 'Task Serializer' do
   let(:task) do
       create(:task,
         user: user,
-        id: 1,
         name: 'nome',
         status: 'pending', 
         created_at: 2.days.ago, 
@@ -15,15 +14,16 @@ RSpec.describe 'Task Serializer' do
 
   let(:task_response) do 
     {
-      user: user,
-      name: 'nome',
-      status: 'pending', 
-      created_at: 2.days.ago, 
-      completed_at: Date.today
+      'userId' => user.id,
+      'id' => task.id,
+      'name' => 'nome',
+      'status' => 'pending', 
+      'createdAt' => task.created_at, 
+      'completedAt' => task.completed_at
     }
   end
   
   it 'returns serialized task' do
-    expect(TaskSerializer.new(:task).as_json).to eq(:task_response)
+    expect(TaskSerializer.new(task).as_json).to eq(task_response)
   end
 end
