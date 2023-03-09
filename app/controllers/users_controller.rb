@@ -9,11 +9,13 @@ class UsersController < ApplicationController
 
   def create
     user = User.new(create_user_params)
+    serialized_user = UserSerializer.new(user).as_json
+    serialized_error = ValidationErrorSerializer.new(user.errors.full_messages).as_json
 
     if user.save
-      render(status: :created, json: UserSerializer.new(user).as_json)
+      render(status: :created, json: serialized_user)
     else
-      render(status: :unprocessable_entity, json: ValidationErrorSerializer.new(user.errors.full_messages).as_json)
+      render(status: :unprocessable_entity, json: serialized_error)
     end
   end
 

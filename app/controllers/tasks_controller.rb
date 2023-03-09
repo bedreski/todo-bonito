@@ -9,21 +9,25 @@ class TasksController < ApplicationController
 
   def show
     task = user.tasks.find(params[:id])
-    render(json: TaskSerializer.new(task).as_json)
+    serialized_task = TaskSerializer.new(task).as_json
+    render(json: serialized_task)
   end
 
   def create
     task = user.tasks.new(create_task_params.merge(status: :pending))
+    serialized_task = TaskSerializer.new(task).as_json
+    serialized_error = ValidationErrorSerializer.new(task.errors.full_messages).as_json
 
     if task.save
-      render(status: :created, json: TaskSerializer.new(task).as_json)
+      render(status: :created, json: serialized_task)
     else
-      render(status: :unprocessable_entity, json: ValidationErrorSerializer.new(task.errors.full_messages).as_json)
+      render(status: :unprocessable_entity, json: serialized_error)
     end
   end
 
   def complete
     task = user.tasks.find(params[:id])
+    serialized_task = TaskSerializer.new(task).as_json
 
     task.update!(status: :completed, completed_at: Time.current)
 
@@ -65,7 +69,7 @@ class TasksController < ApplicationController
       end
     end
 
-    render(json: TaskSerializer.new(task).as_json)
+    render(json: serialized_task)
   end
 
   private
